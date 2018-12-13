@@ -1,0 +1,12 @@
+I spent a lot of this week doing additional research into testing and selecting the technologies to be used
+I started to think about what would be most effective for the users in terms of technology platform.
+Taking useful advice I began to look into appcelerator, jquery mobile and firebase.
+Appcelerator is great for cross platform development and uses javascript which is a language I am already familiar with which is 
+greatly helpful to complete this project.
+JQuery mobile is ideal to create web applications that appear like mobile applications but take away the need to download and install 
+applications as well as taking up storage space on your phone, it also allows for the use of the application on desktops and tablets.
+Appcelerator does also allow for web development but JQuery mobile is a lot easier to learn and use (solely my opinion).
+With that being said, I chose to change the scope of this project just a bit and will be using JQuery mobile to develop a 
+higly responsive web application.
+I also looked into Google Firebase and realized that it has a lot of helpful tools as it allows for authentication, cloud storage, 
+real time databases and much more that will aid in developing a useful application.
