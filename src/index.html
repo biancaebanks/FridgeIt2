@@ -1,152 +1,213 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>FridgeIt</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0initial-scale=1">
-		<link rel="stylesheet" href="includes/themes/customTheme.min.css"/>
-		<link rel="stylesheet" href="includes/themes/jquery.mobile.icons.min.css"/>
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
-		<script src="https://www.gstatic.com/firebasejs/5.7.1/firebase.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-firestore.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-messaging.js"></script>
-		<script>
-		  // Initialize Firebase
-		  var config = {
-		    apiKey: "AIzaSyDdKXXocwGSQMbcBpb7zdMa7J7yI_u5fO0",
-		    authDomain: "fridgeit-8a397.firebaseapp.com",
-		    databaseURL: "https://fridgeit-8a397.firebaseio.com",
-		    projectId: "fridgeit-8a397",
-		    storageBucket: "fridgeit-8a397.appspot.com",
-		    messagingSenderId: "31897010043"
-		  };
-		  firebase.initializeApp(config);
-		</script>
-		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-	</head>
-	<body>
-		<!-- Home page -->
-		<div data-role="page" id="home" data-theme="b">
+  <head>
+    <title>FridgeIt</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0initial-scale=1">
+    <link rel="stylesheet" href="includes/themes/customTheme.min.css"/>
+    <link rel="stylesheet" href="includes/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-auth.js"></script>
 
-			<div data-role="header" data-position="fixed">
-				<h1>Home</h1>
-				<a href="#login" data-role="button" data-rel="dialog" data-transition="pop">Login</a>
-				<a href="#signUp" data-role="button" data-rel="dialog" data-transition="pop">Sign Up</a>
-			</div>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDdKXXocwGSQMbcBpb7zdMa7J7yI_u5fO0",
+        authDomain: "fridgeit-8a397.firebaseapp.com",
+        databaseURL: "https://fridgeit-8a397.firebaseio.com",
+        projectId: "fridgeit-8a397",
+        storageBucket: "fridgeit-8a397.appspot.com",
+        messagingSenderId: "31897010043"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  </head>
+  <body>
+    <!-- Home page -->
+    <div data-role="page" id="home" data-theme="b">
 
-			<div role="main" class="ui-content">
-				<p>Content here...</p>
-				<p>View <a href="#help">help page </a></p>
-			</div>
+      <div data-role="header" data-position="fixed">
+        <h1>Home</h1>
+        <a href="#login" data-role="button" data-rel="dialog" data-transition="pop">Login</a>
+        <a href="#signUp" data-role="button" data-rel="dialog" data-transition="pop">Sign Up</a>
+      </div>
 
-			<div data-role="footer" data-position="fixed">
-				<h4>&copy;2018 BEnterprise</h4>
-			</div>
-		</div>
+      <div role="main" class="ui-content">
+        <p>Content here...</p>
+        <p>View <a href="#help">help page </a></p>
+      </div>
 
-		<!-- Login Page -->
-		<div data-role="page" id="login" data-theme="b">
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
 
-			<div data-role="header">
-				<h1>Login</h1>
-			</div>
+    <!-- Login Page -->
+    <div data-role="page" id="login" data-theme="b">
 
-			<div role="main" class="ui-content">
-				<form action="#accDashboard" method="post">
-					<label for="text-basic">Username:</label>
-					<input type="text" name="text-basic" value="">
-					<label for="password">Password:</label>
-					<input type="password" name="password" id="password" value="" autocomplete=off>
-					<input type="submit" value="Login">
-				</form>
-			</div>
+      <div data-role="header">
+        <h1>Login</h1>
+      </div>
 
-			<div data-role="footer">
-				<h4>&copy;2018 BEnterprise</h4>
-			</div>
-		</div>
+      <div role="main" class="ui-content">
+        <label for="text-basic">Email:</label>
+        <input type="text" name="text-basic" value="" id="email">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" value="" autocomplete=off>
+        <button onclick="login()">Login</button>
+        <button onclick="googleLogin()">Login with Google</button>
+      </div>
 
-		<!-- Sign Up Page -->
-		<div data-role="page" id="signUp" data-theme="b">
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
 
-			<div data-role="header">
-				<h1>Sign Up</h1>
-			</div>
+    <!-- Sign Up Page -->
+    <div data-role="page" id="signUp" data-theme="b">
 
-			<div role="main" class="ui-content">
-				<form action="home" method="post">
-					<label for="text-basic">Email:</label>
-					<input type="text" name="text-basic" value="">
-					<label for="text-basic">Username:</label>
-					<input type="text" name="text-basic" value="">
-					<label for="password">Password:</label>
-					<input type="password" name="password" id="password" value="" autocomplete=off>
-					<label for="password">Re-type Password:</label>
-					<input type="password" name="password" id="password" value="" autocomplete=off>
-					<input type="submit" value="Sign Up">
-				</form>
-			</div>
+      <div data-role="header">
+        <h1>Sign Up</h1>
+      </div>
 
-			<div data-role="footer">
-				<h4>&copy;2018 BEnterprise</h4>
-			</div>
-		</div>
+      <div role="main" class="ui-content">
+          <label for="text-basic">Email:</label>
+          <input type="text" name="text-basic" value="" id="signUpEmail">
+          <label for="text-basic">Username:</label>
+          <input type="text" name="text-basic" value="" id="signUpName">
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="signUpPassword" value="" autocomplete=off>
+          <label for="password">Re-type Password:</label>
+          <input type="password" name="password" value="" id =  "signUpPasswordCheck" autocomplete=off>
+          <button onclick="signUp()">Sign Up</button>
+      </div>
 
-		<!-- Account Dasboard Page -->
-		<div data-role="page" id="accDashboard" data-theme="b">
-			<div data-role="panel" id="myPanel" data-theme="b" data-display="overlay">
-				<input type="button" value="Create Shopping List" data-icon="plus" data-mini="true">
-				<ul data-role="listview" data-count-theme="b" data-inset="true">
-					<li data-role="list-divider">Shopping Lists</li>
-					<li data-mini="true"><a href="#">Shopping Lists <span class="ui-li-count">2</span></a></li>
-				</ul>
-				<a href="#myHeader" data-rel="close">Close Panel</a>
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
 
-			</div>
-			<div data-role="header" data-position="fixed" id="myHeader">
-				<h1>Account Dashboard</h1>
-				<a href="#myPanel" data-rel="back" data-icon="user" data-iconpos="notext"></a>
-				<div data-role="navbar">
-					<ul>
-						<li><a href="#" data-icon="comment">Updates</a></li>
-						<li><a href="#" class="ui-btn-active" data-icon="shop">Shopping Lists</a></li>
-						<li><a href="#" data-icon="gear">Settings</a></li>
-					</ul>
-				</div>
-			</div>
+    <!-- Shopping Lists Page -->
+    <div data-role="page" id="shoppingLists" data-theme="b">
+      <div data-role="panel" id="myShoppingPanel" data-theme="b" data-display="overlay">
+        <input type="button" value="Create Shopping List" data-icon="plus" data-mini="true" onclick="createShoppingList()">
+        <ul data-role="listview" data-count-theme="b" data-inset="true">
+          <li data-role="list-divider">Shopping Lists</li>
+          <li data-mini="true"><a href="javascript:loadList()">My Shopping List <span class="ui-li-count">0</span></a></li>
+        </ul>
+        <a href="#share" data-role="button" data-rel="dialog" data-transition="pop">Share</a>
 
-			<div role="main" class="ui-content">
-				<input type="text" name="text-basic" class="addItem" placeholder="Add Item" data-clear-btn="true" id="addItemId">
-				<ul class="itemList" data-role="listview" data-inset="true">
-				</ul>
-			</div>
+      </div>
+      <div data-role="header" data-position="fixed" id="myHeader">
+        <h1>Shopping Lists</h1>
+        <a href="#myShoppingPanel" data-icon="info" data-iconpos="notext"></a>
+        <a href="javascript:logout();" data-icon="user" data-iconpos="notext"></a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#updates" data-icon="comment">Updates</a></li>
+            <li><a href="#shoppingLists" class="ui-btn-active" data-icon="shop">Shopping Lists</a></li>
+            <li><a href="#" data-icon="gear">Settings</a></li>
+          </ul>
+        </div>
+      </div>
 
-			<div data-role="footer" data-position="fixed">
-				<h4>&copy;2018 BEnterprise</h4>
-			</div>
-		</div>
+      <div role="main" class="ui-content">
+        <input type="text" name="text-basic" class="addItem" placeholder="Add Item" data-clear-btn="true" id="addItemId">
+        <ul class="itemList" data-role="listview" data-inset="true">
+        </ul>
+      </div>
 
-		<!-- Help Page -->
-		<div data-role="page" id="help" data-theme="b">
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
 
-			<div data-role="header" data-position="fixed">
-				<h1>Help</h1>
-				<a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext"></a>
-			</div>
+    <!-- Updates Page -->
+    <div data-role="page" id="updates" data-theme="b">
+      <div data-role="panel" class="myPanel" data-theme="b" data-display="overlay">
+        <input type="button" value="Create Shopping List" data-icon="plus" data-mini="true" onclick="createShoppingList()">
+        <ul data-role="listview" data-count-theme="b" data-inset="true">
+          <li data-role="list-divider">Shopping Lists</li>
+          <li data-mini="true"><a href="#">My Shopping List <span class="ui-li-count">0</span></a></li>
+        </ul>
 
-			<div role="main" class="ui-content">
-				<p>Content here...</p>
-				<p><a href="#home">Back to home</a></p>
-			</div>
+      </div>
+      <div data-role="header" data-position="fixed" id="myHeader">
+        <h1>Updates</h1>
+        <a href="#myPanel" data-icon="info" data-iconpos="notext"></a>
+        <a href="javascript:logout();" data-icon="user" data-iconpos="notext"></a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#updates" class="ui-btn-active" data-icon="comment">Updates</a></li>
+            <li><a href="#shoppingLists" data-icon="shop">Shopping Lists</a></li>
+            <li><a href="#" data-icon="gear">Settings</a></li>
+          </ul>
+        </div>
+      </div>
 
-			<div data-role="footer" data-position="fixed">
-				<h4>&copy;2018 BEnterprise</h4>
-			</div>
-		</div>
+      <div role="main" class="ui-content">
+        <ul data-role="listview" data-inset="true">
+          <li data-role="list-divider">date 1<span class="ui-li-count">2</span></li>
+          <li><a href="index.html">
+              <p><strong>Who</strong> liked...</p>
+              <p class="ui-li-aside"><strong>time</strong>PM</p>
+          </a></li>
+          <li><a href="index.html">
+              <p><strong>Who</strong> commented...</p>
+              <p class="ui-li-aside"><strong>time</strong>AM</p>
+          </a></li>
+          <li data-role="list-divider">date 2 <span class="ui-li-count">1</span></li>
+          <li><a href="index.html">
+              <p><strong>Who</strong> posted...</p>
+              <p class="ui-li-aside"><strong>time</strong>PM</p>
+          </a></li>
+        </ul>
+      </div>
 
-		<script src="fridgeIt.js"></script>
-	</body>
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Share Page -->
+    <div data-role="page" id="share" data-theme="b">
+
+      <div data-role="header">
+        <h1>Share</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+          <input data-type="search" id="findUser">
+          <ul data-role="listview" data-inset="true" id="shareId" class="shareItem">
+        </ul>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+    <!-- Help Page -->
+    <div data-role="page" id="help" data-theme="b">
+
+      <div data-role="header" data-position="fixed">
+        <h1>Help</h1>
+        <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext"></a>
+      </div>
+
+      <div role="main" class="ui-content">
+        <p>Content here...</p>
+        <p><a href="#home">Back to home</a></p>
+      </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <script src="fridgeIt.js"></script>
+  </body>
 </html>
