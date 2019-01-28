@@ -10,19 +10,8 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-auth.js"></script>
-
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDdKXXocwGSQMbcBpb7zdMa7J7yI_u5fO0",
-        authDomain: "fridgeit-8a397.firebaseapp.com",
-        databaseURL: "https://fridgeit-8a397.firebaseio.com",
-        projectId: "fridgeit-8a397",
-        storageBucket: "fridgeit-8a397.appspot.com",
-        messagingSenderId: "31897010043"
-      };
-      firebase.initializeApp(config);
-    </script>
+    <!-- Initialize Firebase-->
+    <script src="config.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
   </head>
@@ -94,7 +83,7 @@
     <!-- Shopping Lists Page -->
     <div data-role="page" id="shoppingLists" data-theme="b">
       <div data-role="panel" id="myShoppingPanel" data-theme="b" data-display="overlay">
-        <input type="button" value="Create Shopping List" data-icon="plus" data-mini="true" onclick="createShoppingList()">
+        <a href="#createNewList" data-role="button" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a>
         <ul data-role="listview" data-count-theme="b" data-inset="true">
           <li data-role="list-divider">Shopping Lists</li>
           <li data-mini="true"><a href="javascript:loadList()">My Shopping List <span class="ui-li-count">0</span></a></li>
@@ -129,7 +118,7 @@
     <!-- Updates Page -->
     <div data-role="page" id="updates" data-theme="b">
       <div data-role="panel" class="myPanel" data-theme="b" data-display="overlay">
-        <input type="button" value="Create Shopping List" data-icon="plus" data-mini="true" onclick="createShoppingList()">
+        <input type="button" value="Create Shopping List" data-icon="plus" data-mini="true" onclick="createList()">
         <ul data-role="listview" data-count-theme="b" data-inset="true">
           <li data-role="list-divider">Shopping Lists</li>
           <li data-mini="true"><a href="#">My Shopping List <span class="ui-li-count">0</span></a></li>
@@ -173,6 +162,28 @@
       </div>
     </div>
 
+    <!-- Create New List Page -->
+    <div data-role="page" id="createNewList" data-theme="b">
+
+      <div data-role="header">
+        <h1>New Shopping List</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+        <label for="text-basic">List Name</label>
+        <input type="text" name="text-basic" value="" id="listNameId">
+        <label for="text-basic">List Id</label>
+        <input type="text" name="text-basic" id="listId" value="">
+        <label for="text-basic">Share (Use commas to separate emails)</label>
+        <input type="text" name="text-basic" id="shareId" value="">
+        <button onclick="createList()">Create List</button>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
     <!-- Share Page -->
     <div data-role="page" id="share" data-theme="b">
 
@@ -190,6 +201,7 @@
         <h4>&copy;2018 BEnterprise</h4>
       </div>
     </div>
+
     <!-- Help Page -->
     <div data-role="page" id="help" data-theme="b">
 

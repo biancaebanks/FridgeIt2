@@ -41,7 +41,6 @@ firebase.auth().onAuthStateChanged(function(user){
   }
 });
 
-
 function login(){
   var userEmail = document.getElementById("email").value;
   var userPassword = document.getElementById("password").value;
@@ -136,9 +135,65 @@ function logout(){
   firebase.auth().signOut();
 }
 
-function createShoppingList(){
+var listName = document.getElementById("listNameId");
+  var listId = document.getElementById("listId");
+  listName.oninput = function(){
+    let stcc = stringToCamelCase(listName.value)
+    if (stcc=="undefined"){
+      listId.value = "";
+    }
+    else{
+      listId.value = stcc;
+    }
+  }
 
+function createList(){
+  var listName = document.getElementById("listNameId");
+  var listId = document.getElementById("listId");
+  var shareId = document.getElementById("shareId");
+  shareIdArray = shareId.value.split(",");
+  var user = firebase.auth().currentUser;
+
+  var data = {
+    name: listName.value,
+    creator: user.email,
+    totalItems:  0,
+    sharedWith: shareIdArray
+  };
+
+  db.collection("lists").doc(listId.value).set(data)
+    .then(function(docRef) {
+      console.log("Document written successfully");
+      window.location.assign("#shoppingLists");
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
 }
+
+function stringToCamelCase(input){
+  var camelCase = "";
+  //var input = document.getElementById("listNameId").value;
+  var letterNumber = /^[0-9a-zA-Z\s]*$/;
+  if (input.match(letterNumber)){
+    var result = input.split(" ");
+    for (i=0; i<result.length;i++){
+      if (i>0){
+        updatedResult = result[i].charAt(0).toUpperCase() + result[i].slice(1);
+      }
+      else if (i==0){
+        updatedResult = result[i].charAt(0).toLowerCase() + result[i].slice(1);
+      }
+      camelCase = camelCase + updatedResult;
+    }
+
+    return camelCase;
+  }else{
+    alert("Only Numbers or Letters Accepted");
+  }
+  
+}
+
 
 function addItemToList(itemName){
   var user = firebase.auth().currentUser;
@@ -149,8 +204,8 @@ function addItemToList(itemName){
       who: user.email
     }
   };
-  var query = db.collection("lists").doc("myShoppingList").collection("items").where("item.name","==",itemName).get()
-        .then((snapshot) =>{
+  var query = db.collection("lists").doc("myShoppingList").collection("items").where("item.name","==",itemName)
+        .onSnapshot((snapshot) =>{
           if (snapshot.empty) {
             console.log('empty result');
             $(function(){
@@ -165,8 +220,6 @@ function addItemToList(itemName){
           } else {
             $("input.addItem").val("");
           }
-        }).catch(function(errors) {
-          console.log(errors);
         });
 }
 
@@ -227,3 +280,6 @@ function shareList(email){
           console.log(errors);
     });
 }
+
+
+
