@@ -1,7 +1,9 @@
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
-$(function(){
+var currentList = "";
+
+$(function(){ 
   $("input.addItem").bind("enterKey",function(e){
     addItemToList($('#addItemId').val());
     // $("ul.itemList").append("<li><a>"+ $('#addItemId').val() +"</a></li>").listview('refresh');
@@ -22,9 +24,12 @@ document.getElementById("findUser").onkeydown = function(e){
   }
 }
 
+
+
 firebase.auth().onAuthStateChanged(function(user){
   if (user){
     //user is signed in
+    updatePanel(user);
     window.location.assign("#shoppingLists");
 
     var user = firebase.auth().currentUser;
@@ -93,7 +98,7 @@ function googleLogin(){
       var query = db.collection("users").where("email","==",userEmail).get()
       var data = {
               email:userEmail,
-              username:userName
+              displayName:userName
             };
       reusableAddToCollection("users",query,data);
       // Sign in with email and pass.
@@ -204,16 +209,29 @@ function addItemToList(itemName){
       who: user.email
     }
   };
-  var query = db.collection("lists").doc("myShoppingList").collection("items").where("item.name","==",itemName)
+  var query = db.collection("lists").doc(currentList).collection("items").where("item.name","==",itemName)
         .onSnapshot((snapshot) =>{
           if (snapshot.empty) {
             console.log('empty result');
             $(function(){
               $("ul.itemList").append("<li><a>"+ $('#addItemId').val() +"</a></li>").listview('refresh');
             });
+
             $("input.addItem").val("");
-            db.collection("lists").doc("myShoppingList").collection("items").add(data).then(function(docRef){
-              console.log("Document written with ID: ",docRef.id);
+            db.collection("lists").doc(currentList).collection("items").add(data).then(function(docRef){
+              var sfDocRef = db.collection("lists").doc(currentList);
+
+              return db.runTransaction(function(transaction) {
+                // This code may get re-run multiple times if there are conflicts.
+                return transaction.get(sfDocRef).then(function(sfDoc) {
+                    if (!sfDoc.exists) {
+                        throw "Document does not exist!";
+                    }
+
+                    var newTotal = sfDoc.data().totalItems + 1;
+                    transaction.update(sfDocRef, { totalItems: newTotal });
+                });
+            })
             }).catch(function(error){
               console.error("Error adding document: ",error);
             });
@@ -221,6 +239,38 @@ function addItemToList(itemName){
             $("input.addItem").val("");
           }
         });
+        console.log(currentList);
+}
+
+function updatePanel(user){
+  console.log("update panel");
+  console.log(user.email);
+  db.collection("lists").where("creator","==",user.email).get()
+    .then(function(querySnapshot){
+     querySnapshot.forEach(function(doc){
+      console.log("creator");
+        console.log(doc.id); 
+        $(function(){
+              console.log("creator");
+              $("ul.userList").append('<li id='+doc.id+'><a href="javascript:loadList('+"'"+doc.id+"','"+doc.data().name+"'"+')">'+ doc.data().name+'<span class="ui-li-count">'+doc.data().totalItems+"</span></a></li>").listview('refresh');
+        });
+     });
+      
+      
+  });
+  db.collection("lists").where("sharedWith","array-contains",user.email)
+    .onSnapshot(function(querySnapshot){
+     querySnapshot.forEach(function(doc){
+      console.log("creator");
+        console.log(doc.id); 
+        $(function(){
+          conosole.log("shared");
+            $("ul.userSharedLists").append('<li id='+doc.id+'><a href="javascript:loadList('+"'"+doc.id+"','"+doc.data().name+"'"+')">'+ doc.data().name+'<span class="ui-li-count">'+doc.data().totalItems+"</span></a></li>").listview('refresh');
+        });
+     });
+      
+      
+  });
 }
 
 function reusableAddToCollection(collName, queryData, data){
@@ -245,14 +295,28 @@ function reusableAddToCollection(collName, queryData, data){
         });
 }
 
-function loadList(){
-  //need to pass in specifier to say which document from user to open
+function loadList(docId, docName){
+  $("ul.itemList").empty();
   var user = firebase.auth().currentUser;
   db.collection("lists").where("creator","==",user.email).get()
     .then((snapshot) =>{
       if (!snapshot.empty){   
+        db.collection("lists").doc(docId).collection("items").get()
+          .then(function(querySnapshot){
+            querySnapshot.forEach(function(doc){
+              $("ul.itemList").append("<li><a>"+ doc.data().item.name +"</a></li>").listview('refresh');
+            })
+            console.log(doc.data().name);
+          })
+      }
+    }).catch(function(errors) {
+          console.log(errors);
+    });
+    db.collection("lists").where("sharedWith","array-contains",user.email).get()
+    .then((snapshot) =>{
+      if (!snapshot.empty){   
         //myShoppingList to the specifier
-        db.collection("lists").doc("myShoppingList").collection("items").get()
+        db.collection("lists").doc(docId).collection("items").get()
           .then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
               $("ul.itemList").append("<li><a>"+ doc.data().item.name +"</a></li>").listview('refresh');
@@ -262,6 +326,9 @@ function loadList(){
     }).catch(function(errors) {
           console.log(errors);
     });
+    document.getElementById("shoppingPageTitle").innerHTML = docName;
+    currentList = docId;
+
 }
 
 function shareList(email){

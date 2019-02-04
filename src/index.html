@@ -83,16 +83,21 @@
     <!-- Shopping Lists Page -->
     <div data-role="page" id="shoppingLists" data-theme="b">
       <div data-role="panel" id="myShoppingPanel" data-theme="b" data-display="overlay">
-        <a href="#createNewList" data-role="button" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a>
-        <ul data-role="listview" data-count-theme="b" data-inset="true">
-          <li data-role="list-divider">Shopping Lists</li>
-          <li data-mini="true"><a href="javascript:loadList()">My Shopping List <span class="ui-li-count">0</span></a></li>
-        </ul>
-        <a href="#share" data-role="button" data-rel="dialog" data-transition="pop">Share</a>
+        <ul data-role="listview">
+          <!-- Edit this so it shows display name of current user -->
+          <li>Welcome, Bianca</li>
+          <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
+          <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
+          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+            <li data-role="list-divider">My Shopping Lists</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+            <li data-role="list-divider">Shared with me</li>
+          </ul>
 
       </div>
       <div data-role="header" data-position="fixed" id="myHeader">
-        <h1>Shopping Lists</h1>
+        <h1 id="shoppingPageTitle">Shopping List</h1>
         <a href="#myShoppingPanel" data-icon="info" data-iconpos="notext"></a>
         <a href="javascript:logout();" data-icon="user" data-iconpos="notext"></a>
         <div data-role="navbar">
@@ -173,7 +178,7 @@
         <label for="text-basic">List Name</label>
         <input type="text" name="text-basic" value="" id="listNameId">
         <label for="text-basic">List Id</label>
-        <input type="text" name="text-basic" id="listId" value="">
+        <input type="text" name="text-basic" id="listId" value="" readonly="readonly">
         <label for="text-basic">Share (Use commas to separate emails)</label>
         <input type="text" name="text-basic" id="shareId" value="">
         <button onclick="createList()">Create List</button>
