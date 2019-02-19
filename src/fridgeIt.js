@@ -3,12 +3,10 @@ var db = firebase.firestore();
 
 var currentList = "";
 
+//add item to list when enter key pressed
 $(function(){ 
   $("input.addItem").bind("enterKey",function(e){
     addItemToList($('#addItemId').val());
-    // $("ul.itemList").append("<li><a>"+ $('#addItemId').val() +"</a></li>").listview('refresh');
-    // alert($('#addItemId').val() + " already added to this list.");
-    // $("input.addItem").val("");
   });
   $("input.addItem").keyup(function(e){
     if(e.keyCode == 13){
@@ -17,6 +15,7 @@ $(function(){
   });
 });
 
+//add user to  share list when enter key pressed
 document.getElementById("findUser").onkeydown = function(e){
   if (e.keyCode == 13){
     shareList(document.getElementById("findUser").value);
@@ -24,8 +23,7 @@ document.getElementById("findUser").onkeydown = function(e){
   }
 }
 
-
-
+// if user log in to home
 firebase.auth().onAuthStateChanged(function(user){
   if (user){
     //user is signed in
@@ -137,6 +135,8 @@ function googleLogin(){
     }
 
 function logout(){
+  $("ul.userList").empty();
+  $("ul.userSharedLists").empty();
   firebase.auth().signOut();
 }
 
@@ -214,7 +214,7 @@ function addItemToList(itemName){
           if (snapshot.empty) {
             console.log('empty result');
             $(function(){
-              $("ul.itemList").append("<li><a>"+ $('#addItemId').val() +"</a></li>").listview('refresh');
+              $("ul.itemList").append("<li><a>"+ $('#addItemId').val() +'</a><a href="#" class="delete">Delete</a></li>').listview().listview('refresh');
             });
 
             $("input.addItem").val("");
@@ -239,20 +239,18 @@ function addItemToList(itemName){
             $("input.addItem").val("");
           }
         });
-        console.log(currentList);
+        $("ul.userList").empty();
+        $("ul.userSharedLists").empty();
 }
 
 function updatePanel(user){
-  console.log("update panel");
-  console.log(user.email);
+  // $("ul.userList").empty();
+  // $("ul.userSharedList").empty();
   db.collection("lists").where("creator","==",user.email).get()
     .then(function(querySnapshot){
      querySnapshot.forEach(function(doc){
-      console.log("creator");
-        console.log(doc.id); 
         $(function(){
-              console.log("creator");
-              $("ul.userList").append('<li id='+doc.id+'><a href="javascript:loadList('+"'"+doc.id+"','"+doc.data().name+"'"+')">'+ doc.data().name+'<span class="ui-li-count">'+doc.data().totalItems+"</span></a></li>").listview('refresh');
+              $("ul.userList").append('<li id='+doc.id+'><a href="javascript:loadList('+"'"+doc.id+"','"+doc.data().name+"'"+')">'+ doc.data().name+'<span class="ui-li-count">'+doc.data().totalItems+"</span></a></li>").listview().listview('refresh');
         });
      });
       
@@ -261,11 +259,8 @@ function updatePanel(user){
   db.collection("lists").where("sharedWith","array-contains",user.email)
     .onSnapshot(function(querySnapshot){
      querySnapshot.forEach(function(doc){
-      console.log("creator");
-        console.log(doc.id); 
         $(function(){
-          conosole.log("shared");
-            $("ul.userSharedLists").append('<li id='+doc.id+'><a href="javascript:loadList('+"'"+doc.id+"','"+doc.data().name+"'"+')">'+ doc.data().name+'<span class="ui-li-count">'+doc.data().totalItems+"</span></a></li>").listview('refresh');
+            $("ul.userSharedLists").append('<li id='+doc.id+'><a href="javascript:loadList('+"'"+doc.id+"','"+doc.data().name+"'"+')">'+ doc.data().name+'<span class="ui-li-count">'+doc.data().totalItems+"</span></a></li>").listview().listview('refresh');
         });
      });
       
@@ -304,7 +299,7 @@ function loadList(docId, docName){
         db.collection("lists").doc(docId).collection("items").get()
           .then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
-              $("ul.itemList").append("<li><a>"+ doc.data().item.name +"</a></li>").listview('refresh');
+              $("ul.itemList").append("<li><a>"+ doc.data().item.name +'</a><a href="#" class="delete">Delete</a></li>').listview().listview('refresh');
             })
             console.log(doc.data().name);
           })
@@ -319,7 +314,7 @@ function loadList(docId, docName){
         db.collection("lists").doc(docId).collection("items").get()
           .then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
-              $("ul.itemList").append("<li><a>"+ doc.data().item.name +"</a></li>").listview('refresh');
+              $("ul.itemList").append("<li><a>"+ doc.data().item.name +'</a><a href="#" class="delete">Delete</a></li>').listview().listview('refresh');
             })
           })
       }
@@ -341,12 +336,10 @@ function shareList(email){
         db.collection("lists").doc("myShoppingList").update({
           sharedWith: firebase.firestore.FieldValue.arrayUnion(email)
         })
-          $("ul.shareItem").append("<li data-icon = "+"delete"+"><a>"+ email +"</a></li>").listview('refresh');
+          $("ul.shareItem").append("<li data-icon = "+"delete"+"><a>"+ email +"</a></li>").liatview().listview('refresh');
       }
     }).catch(function(errors) {
           console.log(errors);
     });
 }
-
-
 

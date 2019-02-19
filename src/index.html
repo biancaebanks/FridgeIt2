@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0initial-scale=1">
     <link rel="stylesheet" href="includes/themes/customTheme.min.css"/>
     <link rel="stylesheet" href="includes/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
     <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
@@ -88,21 +89,27 @@
           <li>Welcome, Bianca</li>
           <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
           <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
-          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          <ul data-role="listview" data-count-theme="b">
             <li data-role="list-divider">My Shopping Lists</li>
           </ul>
-          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          </ul>
+          <ul data-role="listview" data-count-theme="b">
             <li data-role="list-divider">Shared with me</li>
           </ul>
-
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          </ul>
+          <li><a href="javascript:logout();">Log Out</a></li>
+      </ul>
       </div>
       <div data-role="header" data-position="fixed" id="myHeader">
         <h1 id="shoppingPageTitle">Shopping List</h1>
-        <a href="#myShoppingPanel" data-icon="info" data-iconpos="notext"></a>
-        <a href="javascript:logout();" data-icon="user" data-iconpos="notext"></a>
+        <a href="#myShoppingPanel" data-icon="bars" data-iconpos="notext"></a>
+        <a href="#" data-icon="shop" data-iconpos="notext"></a>
         <div data-role="navbar">
           <ul>
-            <li><a href="#updates" data-icon="comment">Updates</a></li>
+            <li><a href="#posts" data-icon="edit">Posts</a></li>
+            <li><a href="#updates" data-icon="recycle">Updates</a></li>
             <li><a href="#shoppingLists" class="ui-btn-active" data-icon="shop">Shopping Lists</a></li>
             <li><a href="#" data-icon="gear">Settings</a></li>
           </ul>
@@ -111,7 +118,7 @@
 
       <div role="main" class="ui-content">
         <input type="text" name="text-basic" class="addItem" placeholder="Add Item" data-clear-btn="true" id="addItemId">
-        <ul class="itemList" data-role="listview" data-inset="true">
+        <ul id ="thislist" class="itemList touch" data-role="listview" data-inset="true" data-icon="false" data-split-icon="delete" data-split-theme="b">
         </ul>
       </div>
 
@@ -120,23 +127,103 @@
       </div>
     </div>
 
+    <!-- Posts Page -->
+    <div data-role="page" id="posts" data-theme="b">
+      <div data-role="panel" id="myPostsPanel" data-theme="b" data-display="overlay">
+        <ul data-role="listview">
+          <!-- Edit this so it shows display name of current user -->
+          <li>Welcome, Bianca</li>
+          <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
+          <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
+          <!-- <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">My Shopping Lists</li>
+          </ul> -->
+          <!-- <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          </ul>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">Shared with me</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          </ul> -->
+          <li><a href="javascript:logout();">Log Out</a></li>
+      </ul>
+      </div>
+      <div data-role="header" data-position="fixed" id="postsHeader">
+        <h1 id="postsTitle">Posts</h1>
+        <a href="#myPostsPanel" data-icon="bars" data-iconpos="notext"></a>
+        <a href="#" data-icon="shop" data-iconpos="notext"></a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#posts" class="ui-btn-active"  data-icon="edit">Posts</a></li>
+            <li><a href="#updates" data-icon="recycle">Updates</a></li>
+            <li><a href="#shoppingLists" data-icon="shop">Shopping Lists</a></li>
+            <li><a href="#" data-icon="gear">Settings</a></li>
+          </ul>
+        </div>
+      </div>
+        <div role="main" class="ui-content">
+          <div style="border: 1px solid #000;padding-left: 1%; padding-right: 1%;">
+          <h3>Create A Post</h3>
+          <textarea rows = "4" cols="50" name="text-basic" class="writePost" placeholder="Write a post ..." data-clear-btn="true" id="writePostId"></textarea>
+          <div data-role="controlgroup" data-type="horizontal">
+              <a href="#" data-role="button" data-icon="plus" data-iconpos="right">Post</a>
+              <a href="#" data-role="button" data-icon="camera" data-iconpos="right">Insert Picture</a>
+              <a href="#" data-role="button" data-icon="video" data-iconpos="right">Insert Video</a>
+          </div>
+        </div>
+        <div class="mbsc-card">
+          <div class="mbsc-card-header">
+              <img src="https://img.mobiscroll.com/demos/mr-profile1.png" class="mbsc-avatar">
+              <h5 class="mbsc-card-title mbsc-bold">John Bush</h5>
+              <div class="mbsc-card-subtitle"> at 2:23 PM</div>
+          </div>
+          <img src="https://img.mobiscroll.com/demos/account-background.jpg" width="40%">
+          <div class="mbsc-card-content">
+              Best trip ever!!! :D I'll definetly come back here. :)
+          </div>
+          <div class=" mbsc-card-footer ">
+              <button class="mbsc-btn mbsc-btn-flat">Like</button>
+              <button class="mbsc-btn mbsc-btn-flat">Share</button>
+          </div>
+      </div>
+    </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
     <!-- Updates Page -->
     <div data-role="page" id="updates" data-theme="b">
-      <div data-role="panel" class="myPanel" data-theme="b" data-display="overlay">
+      <div data-role="panel" id= "myUpdatesPanel" data-theme="b" data-display="overlay">
         <input type="button" value="Create Shopping List" data-icon="plus" data-mini="true" onclick="createList()">
         <ul data-role="listview" data-count-theme="b" data-inset="true">
-          <li data-role="list-divider">Shopping Lists</li>
-          <li data-mini="true"><a href="#">My Shopping List <span class="ui-li-count">0</span></a></li>
+          <!-- Edit this so it shows display name of current user -->
+          <li>Welcome, Bianca</li>
+          <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
+          <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">My Shopping Lists</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          </ul>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">Shared with me</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          </ul>
+          <li><a href="javascript:logout();">Log Out</a></li>
         </ul>
 
       </div>
       <div data-role="header" data-position="fixed" id="myHeader">
         <h1>Updates</h1>
-        <a href="#myPanel" data-icon="info" data-iconpos="notext"></a>
-        <a href="javascript:logout();" data-icon="user" data-iconpos="notext"></a>
+        <a href="#myUpdatesPanel" data-icon="bars" data-iconpos="notext"></a>
+        <a href="#" data-icon="shop" data-iconpos="notext"></a>
         <div data-role="navbar">
           <ul>
-            <li><a href="#updates" class="ui-btn-active" data-icon="comment">Updates</a></li>
+            <li><a href="#posts" data-icon="edit">Posts</a></li>
+            <li><a href="#updates" class="ui-btn-active" data-icon="recycle">Updates</a></li>
             <li><a href="#shoppingLists" data-icon="shop">Shopping Lists</a></li>
             <li><a href="#" data-icon="gear">Settings</a></li>
           </ul>
