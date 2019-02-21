@@ -1,0 +1,117 @@
+/* Left transition */
+li.left {
+    -webkit-transition: -webkit-transform 250ms ease;
+    -webkit-transform: translateX(-100%);
+    -moz-transition: -moz-transform 250ms ease;
+    -moz-transform: translateX(-100%);
+    -o-transition: -o-transform 250ms ease;
+    -o-transform: translateX(-100%);
+    transition: transform 250ms ease;
+    transform: translateX(-100%);
+}
+/* Right transition */
+li.right {
+    -webkit-transition: -webkit-transform 250ms ease;
+    -webkit-transform: translateX(100%);
+    -moz-transition: -moz-transform 250ms ease;
+    -moz-transform: translateX(100%);
+    -o-transition: -o-transform 250ms ease;
+    -o-transform: translateX(100%);
+    transition: transform 250ms ease;
+    transform: translateX(100%);
+}
+/* Border bottom for the previous button during the transition*/
+li.left a.ui-btn,
+li.right a.ui-btn {
+    border-top-width: 0;
+    border-left-width: 1px;
+    border-right-width: 1px;
+}
+li a.ui-btn.border-bottom {
+    border-bottom-width: 1px;
+}
+/* Hide the delete button on touch devices */
+ul.touch li.ui-li-has-alt a.delete {
+    display: none;
+}
+ul.touch li.ui-li-has-alt a.ui-btn {
+    margin-right:0;
+}
+/* Styling for the popup */
+#confirm p {
+    text-align: center;
+    font-size: inherit;
+    margin-bottom: .75em;
+}
+
+/*Styling for Posts*/
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  -ms-flex: 24%; /* IE10 */
+  flex: 24%;
+  max-width: 24%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .column {
+    -ms-flex: 50%;
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    -ms-flex: 100%;
+    flex: 100%;
+    max-width: 100%;
+  }
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 100%;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.cardbutton{
+display:inline-block;
+background-color: #555555;
+color: #FFFFFF;
+}
+
+#imageUpload{
+	display: none;
+}
+
+.center-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height:25%;
+}

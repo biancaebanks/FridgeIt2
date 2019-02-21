@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FridgeIt</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <link rel="stylesheet" href="includes/themes/customTheme.min.css"/>
+    <link rel="stylesheet" href="includes/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="style.css"/>
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-auth.js"></script>
+    <!-- Initialize Firebase-->
+    <script src="config.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  </head>
+  <body>
+    <!-- Home page -->
+    <div data-role="page" id="home" data-theme="b">
+
+      <div data-role="header" data-position="fixed">
+        <h1>Home</h1>
+        <a href="#login" data-role="button" data-rel="dialog" data-transition="pop">Login</a>
+        <a href="#signUp" data-role="button" data-rel="dialog" data-transition="pop">Sign Up</a>
+      </div>
+
+      <div role="main" class="ui-content">
+        <div class = "card">
+          <div class="container center-img">
+            <img src="/images/FridgeItLogo.png" class="center-img">
+          </div>
+          <div class = "container">
+            <iframe width="100%" height="315" src="/images/FridgeItPitch.mp4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="container center-img">
+            <h3>FridgeIt is FREE for all users!</h3>
+            <h3>All you need to do is sign up above and start creating your shopping list.</h3>
+            <h3>Share with your friends or families and watch shopping trips get more efficient.</h3>
+            <h3>Tell your friends and family about your achievements or post to do lists on the fridge.</h3>
+            <h2 style="color:#f4a742;">FridgeIt . Grocery Shopping Made Easy .</h2>
+          </div>
+        </div>
+      </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Login Page -->
+    <div data-role="page" id="login" data-theme="b">
+
+      <div data-role="header">
+        <h1>Login</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+        <label for="text-basic">Email:</label>
+        <input type="text" name="text-basic" value="" id="email">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" value="" autocomplete=off>
+        <button onclick="login()">Login</button>
+        <button onclick="googleLogin()">Login with Google</button>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div data-role="page" id="signUp" data-theme="b">
+
+      <div data-role="header">
+        <h1>Sign Up</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+          <label for="text-basic">Email:</label>
+          <input type="text" name="text-basic" value="" id="signUpEmail">
+          <label for="text-basic">Username:</label>
+          <input type="text" name="text-basic" value="" id="signUpName">
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="signUpPassword" value="" autocomplete=off>
+          <label for="password">Re-type Password:</label>
+          <input type="password" name="password" value="" id =  "signUpPasswordCheck" autocomplete=off>
+          <button onclick="signUp()">Sign Up</button>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Shopping Lists Page -->
+    <div data-role="page" id="shoppingLists" data-theme="b">
+      <div data-role="panel" id="myShoppingPanel" data-theme="b" data-display="overlay">
+        <ul data-role="listview">
+          <li class="welcomeMessage"></li>
+          <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
+          <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">My Shopping Lists</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          </ul>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">Shared with me</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          </ul>
+          <li><a href="javascript:logout();">Log Out</a></li>
+      </ul>
+      </div>
+      <div data-role="header" data-position="fixed" id="myHeader">
+        <h1 id="shoppingPageTitle">Shopping Lists</h1>
+        <a href="#myShoppingPanel" data-icon="bars" data-iconpos="notext"></a>
+        <a href="#" data-icon="shop" data-iconpos="notext"></a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#posts" data-icon="edit">Posts</a></li>
+            <li><a href="#updates" data-icon="recycle">Updates</a></li>
+            <li><a href="#shoppingLists" class="ui-btn-active" data-icon="bullets">Shopping Lists</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div role="main" class="ui-content">
+        <input type="text" name="text-basic" class="addItem" placeholder="Add Item" data-clear-btn="true" id="addItemId">
+        <ul id ="thislist" class="itemList touch" data-role="listview" data-inset="true" data-icon="false" data-split-icon="delete" data-split-theme="b">
+        </ul>
+      </div>
+      <div id="confirm" class="ui-content" data-role="popup" data-theme="a">
+        <p id="question">Are you sure you want to delete:</p>
+        <div class="ui-grid-a">
+            <div class="ui-block-a">
+                <a id="yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
+            </div>
+            <div class="ui-block-b">
+                <a id="cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Posts Page -->
+    <div data-role="page" id="posts" data-theme="b">
+      <div data-role="panel" id="myPostsPanel" data-theme="b" data-display="overlay">
+        <ul data-role="listview">
+          <!-- Edit this so it shows display name of current user -->
+          <li class="welcomeMessage">Welcome, Bianca</li>
+          <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
+          <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">My Shopping Lists</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          </ul>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">Shared with me</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          </ul>
+          <li><a href="javascript:logout();">Log Out</a></li>
+      </ul>
+      </div>
+      <div data-role="header" data-position="fixed" id="postsHeader">
+        <h1 id="postsTitle">Posts</h1>
+        <a href="#myPostsPanel" data-icon="bars" data-iconpos="notext"></a>
+        <a href="#" data-icon="shop" data-iconpos="notext"></a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#posts" class="ui-btn-active"  data-icon="edit">Posts</a></li>
+            <li><a href="#updates" data-icon="recycle">Updates</a></li>
+            <li><a href="#shoppingLists" data-icon="bullets">Shopping Lists</a></li>
+          </ul>
+        </div>
+      </div>
+        <div role="main" class="ui-content">
+          <div style="border: 1px solid #000;padding:1%;margin-bottom: 3%;">
+          <h3>Create A Post</h3>
+          <textarea rows = "4" cols="50" name="text-basic" class="writePost" placeholder="Write a post ..." data-clear-btn="true" id="writePostId"></textarea>
+          <div data-role="controlgroup" data-type="horizontal">
+              <a href="#postTo" data-role="button" data-icon="plus" data-iconpos="right" data-rel="dialog" data-transition="pop">Post</a>
+              <a href="#postToWImg" data-role="button" data-icon="camera" data-iconpos="right" id="imageLink" data-rel="dialog" data-transition="pop">Insert Picture</a>
+              <input id="imageUpload" type="file"/>
+          </div>
+        </div>
+        <!--Cards here -->
+        <div class="row">
+            <div class="column">
+            </div>
+            <div class="column">
+            </div>
+            <div class="column">
+            </div>
+            <div class="column">
+            </div>
+        </div>
+    </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Updates Page -->
+    <div data-role="page" id="updates" data-theme="b">
+      <div data-role="panel" id= "myUpdatesPanel" data-theme="b" data-display="overlay">
+        <ul data-role="listview">
+          <!-- Edit this so it shows display name of current user -->
+          <li class="welcomeMessage">Welcome, Bianca</li>
+          <li><a href="#createNewList" data-mini="true" data-rel="dialog" data-transition="pop">Create Shopping List</a></li>
+          <li><a href="#share" data-rel="dialog" data-transition="pop">Share</a></li>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">My Shopping Lists</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userList" class="userList">
+          </ul>
+          <ul data-role="listview" data-count-theme="b">
+            <li data-role="list-divider">Shared with me</li>
+          </ul>
+          <ul data-role="listview" data-count-theme="b" id="userSharedLists" class="userSharedLists">
+          </ul>
+          <li><a href="javascript:logout();">Log Out</a></li>
+      </ul>
+
+      </div>
+      <div data-role="header" data-position="fixed" id="myHeader">
+        <h1>Updates</h1>
+        <a href="#myUpdatesPanel" data-icon="bars" data-iconpos="notext"></a>
+        <a href="#" data-icon="shop" data-iconpos="notext"></a>
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#posts" data-icon="edit">Posts</a></li>
+            <li><a href="#updates" class="ui-btn-active" data-icon="recycle">Updates</a></li>
+            <li><a href="#shoppingLists" data-icon="bullets">Shopping Lists</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div role="main" class="ui-content">
+         <ul id = "updatesList" class="listUpdates" data-role="listview" data-inset="true">
+ <!--         <li><a href="#">
+              <p><strong>Who</strong> liked...</p>
+              <p class="ui-li-aside"><strong>time</strong>PM</p>
+          </a></li>
+          <li><a href="#">
+              <p><strong>Who</strong> commented...</p>
+              <p class="ui-li-aside"><strong>time</strong>AM</p>
+          </a></li>
+          <li><a href="#">
+              <p><strong>Who</strong> posted...</p>
+              <p class="ui-li-aside"><strong>time</strong>PM</p>
+          </a></li> -->
+        </ul>
+      </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Create New List Page -->
+    <div data-role="page" id="createNewList" data-theme="b">
+
+      <div data-role="header">
+        <h1>New Shopping List</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+        <label for="text-basic">List Name</label>
+        <input type="text" name="text-basic" value="" id="listNameId">
+        <label for="text-basic">List Id</label>
+        <input type="text" name="text-basic" id="listId" value="" readonly="readonly">
+        <label for="text-basic">Share (Use commas to separate emails)</label>
+        <input type="text" name="text-basic" id="shareId" value="">
+        <button onclick="createList()">Create List</button>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Share Page -->
+    <div data-role="page" id="share" data-theme="b">
+
+      <div data-role="header">
+        <h1>Share</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+          <input data-type="search" id="findUser">
+          <ul data-role="listview" data-inset="true" id="shareId" class="shareItem">
+        </ul>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Post To Page -->
+    <div data-role="page" id="postTo" data-theme="b">
+
+      <div data-role="header">
+        <h1>Post To</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+          <label for="postTo">Posting To: </label>
+          <p id = "postingTo"></p>
+          <select name="select-native-4" id="selectOpt">
+            <optgroup id ="myListOpt" label="My Lists">
+            </optgroup>
+            <optgroup id ="mySharedListOpt"label="Shared With Me">
+            </optgroup>
+          </select>
+          <button onclick="createPost()">OK</button>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+        <!-- Post To With Image Page -->
+    <div data-role="page" id="postToWImg" data-theme="b">
+
+      <div data-role="header">
+        <h1>Post To</h1>
+      </div>
+
+      <div role="main" class="ui-content">
+          <label for="postTo">Posting To: </label>
+          <p id = "postingTo"></p>
+          <select name="select-native-4" id="selectOpt">
+            <option>Select a list</option>
+            <optgroup id ="myListOptImg" label="My Lists">
+            </optgroup>
+            <optgroup id ="mySharedListOptImg"label="Shared With Me">
+            </optgroup>
+          </select>
+          <button onclick="uploadImage()">OK</button>
+      </div>
+
+      <div data-role="footer">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <!-- Help Page -->
+    <div data-role="page" id="help" data-theme="b">
+
+      <div data-role="header" data-position="fixed">
+        <h1>Help</h1>
+        <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext"></a>
+      </div>
+
+      <div role="main" class="ui-content">
+        <p>Content here...</p>
+        <p><a href="#home">Back to home</a></p>
+      </div>
+
+      <div data-role="footer" data-position="fixed">
+        <h4>&copy;2018 BEnterprise</h4>
+      </div>
+    </div>
+
+    <script src="fridgeIt.js"></script>
+  </body>
+</html>
+
